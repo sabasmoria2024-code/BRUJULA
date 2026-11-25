@@ -13,6 +13,7 @@ Esta app está hecha con archivos web estándar y se puede editar en Visual Stud
 
 - `index.html`: títulos, textos y tarjetas de la pantalla principal.
 - `styles.css`: colores, tipografía, tamaños y distribución.
+- `assets/portada-vintage.png`: portada de paisaje y brújula; puedes reemplazar la imagen conservando el mismo nombre.
 - `app.js`: contenido de las guías, diagramas, ubicación y brújula.
 - `extras.js`: búsqueda de guías, plan de salida guardado en el teléfono y lectura en voz alta.
 - `manifest.webmanifest` y `sw.js`: instalación y funcionamiento sin conexión.
