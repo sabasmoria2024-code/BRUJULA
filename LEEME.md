@@ -17,7 +17,7 @@ Esta app está hecha con archivos web estándar y se puede editar en Visual Stud
 - `extras.js`: búsqueda de guías, plan de salida guardado en el teléfono y lectura en voz alta.
 - `manifest.webmanifest` y `sw.js`: instalación y funcionamiento sin conexión.
 
-La app incluye guías de campo y astronomía básica. La fase lunar del inicio es una aproximación calculada en el dispositivo; para horarios precisos y videos se necesita internet. Los videos externos no se guardan ni se descargan con la app. Brújula no incorpora mapas topográficos offline; ofrece enlaces a Organic Maps (gratuita) y al catálogo oficial SINIT para descargar mapas antes de salir. El plan de salida se guarda solo en el dispositivo; compartir abre WhatsApp para que la persona revise y envíe el mensaje.
+La app incluye guías de campo y astronomía básica. La fase lunar del inicio es una aproximación calculada en el dispositivo; para horarios precisos y videos se necesita internet. Los videos externos no se guardan ni se descargan con la app. Brújula no incorpora mapas topográficos offline; ofrece enlaces a Organic Maps (gratuita) y al catálogo oficial SINIT para descargar mapas antes de salir. El plan de salida se guarda solo en el dispositivo; compartir abre WhatsApp para que la persona revise y envíe el mensaje. El apartado «¿Estás perdido?» obtiene coordenadas GPS, permite tomar una foto del entorno (también del cielo nocturno o el horizonte) y compartirla cuando el teléfono admite compartir archivos; si no, permite adjuntar la foto manualmente. La foto no se sube por sí sola.
 
 Para probar la geolocalización, la brújula y el modo sin conexión, sirve la carpeta desde `localhost` o una web segura (HTTPS). Abrir el archivo directamente puede limitar esas funciones del navegador.
 
