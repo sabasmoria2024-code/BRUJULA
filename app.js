@@ -47,6 +47,23 @@ updateMoonCard();
 function openGuide(id){const g=guides[id];if(!g)return;$('#modalKicker').textContent=g.kicker;$('#modalTitle').textContent=g.title;$('#modalContent').innerHTML=g.html;$('#modal').hidden=false;document.body.style.overflow='hidden';$('#closeModal').focus()}
 function closeGuide(){ $('#modal').hidden=true;document.body.style.overflow=''; }
 $('#closeModal').addEventListener('click',closeGuide);$('#modal').addEventListener('click',e=>{if(e.target===$('#modal'))closeGuide()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGuide()});
+let flashlightStream=null,flashlightTrack=null,flashlightOn=false;
+const flashBtn=$('#flashBtn'),flashStatus=$('#flashStatus');
+async function setFlashlight(on){
+ if(on){
+  if(!navigator.mediaDevices?.getUserMedia){flashStatus.textContent='Este navegador no permite controlar la linterna. Usa el botón físico del teléfono.';return}
+  try{
+   if(!flashlightTrack){flashlightStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'}}});flashlightTrack=flashlightStream.getVideoTracks()[0];if(!flashlightTrack)throw Error('No se encontró cámara');const caps=flashlightTrack.getCapabilities?.();if(caps&&caps.torch===undefined)throw Error('Linterna no compatible')}
+   await flashlightTrack.applyConstraints({advanced:[{torch:true}]});flashlightOn=true;flashBtn.textContent='🔦  Apagar linterna';flashBtn.setAttribute('aria-pressed','true');flashStatus.textContent='Linterna encendida. Toca “Apagar linterna” para apagarla.';
+  }catch{if(flashlightStream)flashlightStream.getTracks().forEach(t=>t.stop());flashlightStream=null;flashlightTrack=null;flashlightOn=false;flashBtn.textContent='🔦  Encender linterna';flashBtn.setAttribute('aria-pressed','false');flashStatus.textContent='No se pudo encender. Permite el acceso a la cámara y verifica que el teléfono y el navegador admitan la linterna.'}
+ }else{
+  try{if(flashlightTrack)await flashlightTrack.applyConstraints({advanced:[{torch:false}]})}catch{}
+  if(flashlightStream)flashlightStream.getTracks().forEach(t=>t.stop());flashlightStream=null;flashlightTrack=null;flashlightOn=false;flashBtn.textContent='🔦  Encender linterna';flashBtn.setAttribute('aria-pressed','false');flashStatus.textContent='Linterna apagada.';
+ }
+}
+flashBtn.addEventListener('click',()=>setFlashlight(!flashlightOn));
+function stopFlashlight(){if(flashlightStream)flashlightStream.getTracks().forEach(t=>t.stop());flashlightStream=null;flashlightTrack=null;flashlightOn=false;if(flashBtn){flashBtn.textContent='🔦  Encender linterna';flashBtn.setAttribute('aria-pressed','false')}}
+window.addEventListener('pagehide',stopFlashlight);
 $('#locateBtn').addEventListener('click',getLocation);$('#copyCoords').addEventListener('click',async()=>{if(!coords)return;await navigator.clipboard.writeText(`${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)}`);$('#copyCoords').textContent='Copiado';setTimeout(()=>$('#copyCoords').textContent='Copiar',1600)});
 function getLocation(){if(!navigator.geolocation){$('#locationText').textContent='Este navegador no ofrece ubicación.';return}$('#locationTitle').textContent='Buscando ubicación…';$('#locationText').textContent='Mantén el teléfono con vista despejada del cielo.';navigator.geolocation.getCurrentPosition(p=>{coords=p.coords;$('#locationTitle').textContent='Ubicación obtenida';$('#locationText').textContent=`${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)} · precisión ±${Math.round(coords.accuracy)} m`;$('#copyCoords').disabled=false;localStorage.setItem('lastCoords',JSON.stringify({lat:coords.latitude,lon:coords.longitude,time:Date.now()}))},e=>{$('#locationTitle').textContent='No se pudo obtener la ubicación';$('#locationText').textContent=e.code===1?'Permite la ubicación en el navegador e inténtalo otra vez.':'Muévete a un lugar más despejado e inténtalo otra vez.'},{enableHighAccuracy:true,timeout:20000,maximumAge:0})}
 window.shareLocation=async()=>{let c=coords;if(!c){const saved=localStorage.getItem('lastCoords');if(saved){const x=JSON.parse(saved);c={latitude:x.lat,longitude:x.lon}}}if(!c){getLocation();return}const msg=`Necesito ayuda. Mi ubicación aproximada: ${c.latitude.toFixed(6)}, ${c.longitude.toFixed(6)}. Mapa: https://maps.google.com/?q=${c.latitude},${c.longitude}`;if(navigator.share){try{await navigator.share({title:'Ubicación de emergencia',text:msg})}catch{}}else{await navigator.clipboard.writeText(msg);alert('Mensaje y coordenadas copiados. Envíalos a tus contactos o a emergencias locales cuando tengas señal.')}};
