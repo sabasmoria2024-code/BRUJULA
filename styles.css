@@ -21,3 +21,5 @@
 .hero-art:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,41,31,.96) 0%,rgba(20,41,31,.84) 34%,rgba(20,41,31,.46) 68%,rgba(20,41,31,.18) 100%),linear-gradient(0deg,rgba(20,41,31,.55),transparent 58%)}
 .hero-copy{max-width:720px;padding:70px 0 56px 56px;z-index:1}
 @media(max-width:700px){.hero{display:block;min-height:680px}.hero-art{position:absolute;inset:0;height:auto;opacity:1}.hero-cover{object-position:center 72%}.hero-copy{padding:40px 24px 36px}.hero h1{font-size:43px}}
+
+.creator-credit{font-size:8px;opacity:.72;white-space:nowrap}@media(max-width:700px){footer{flex-wrap:wrap}.creator-credit{width:100%;text-align:right}}
